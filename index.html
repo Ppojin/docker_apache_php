@@ -2,9 +2,277 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.3.0/prototype.js"></script> -->
+
+
+    <script>
+        // jQuery.noConflict();
+        function JSONtoString(object) {
+            var results = [];
+            for (var property in object) {
+                var value = object[property];
+                if (value)
+                    results.push(property.toString() + ': ' + value);
+                }
+                        
+                return '{' + results.join(', ') + '}';
+        }
+        $(function(){
+            $("#c_submit").on('click', function(){
+                var email = $("#c_email").val();
+                var pwd = $("#c_pwd").val();
+                var name = $("#c_name").val();
+                var phone = $("#c_phone").val();
+                var recommender = $("#c_recommender").val();
+                var json = {
+                    'command':'create',
+                    data:{
+                        'email': email,
+                        'pwd': pwd,
+                        'name': name,
+                        'phone': phone,
+                        'recommender': recommender
+                    }
+                }
+                var send = {
+                    type:'POST',
+                    url:'http://localhost/userapi/index.php/main',
+                    data:json,
+                    success:function(data,status,xhr){
+                        console.log(data);
+                    },
+                    error:function(jqXHR, textStatus, errorThrown){
+                        console.log(jqXHR.responseText);
+                    }
+                }
+                $.ajax(send)
+            })
+        })
+        $(function(){
+            $("#ru_submit").on('click', function(){
+                var id = $("#ru_id").val();
+                var json = {'command':'show',data:{'id':id}};
+                var send = {
+                    type:'POST',
+                    url:'http://localhost/userapi/index.php/main',
+                    data:json,
+                    success:function(data,status,xhr){
+                        console.log(data);
+                        $("#u_email").val(data['email'])
+                        $("#u_pwd").val(data['pwd'])
+                        $("#u_name").val(data['name'])
+                        $("#u_phone").val(data['phone'])
+                        $("#u_rcode").val(data['r_code'])
+                    },
+                    error:function(jqXHR, textStatus, errorThrown){
+                        console.log(jqXHR.responseText);
+                    }
+                }
+                $.ajax(send)
+            })
+        })
+        $(function(){
+            $("#u_submit").on('click', function(){
+                var id = $("#ru_id").val();
+                var email = $("#u_email").val();
+                var pwd = $("#u_pwd").val();
+                var name = $("#u_name").val();
+                var phone = $("#u_phone").val();
+                var r_code = $("#u_rcode").val();
+                var json = {
+                    'command':'update',
+                    data:{'id': id,
+                        'email': email,
+                        'pwd': pwd,
+                        'name': name,
+                        'phone': phone,
+                        'r_code': r_code
+                    }
+                }
+                var send = {
+                    type:'POST',
+                    url:'http://localhost/userapi/index.php/main',
+                    data:json,
+                    success:function(data,status,xhr){
+                        console.log(data);
+                    },
+                    error:function(jqXHR, textStatus, errorThrown){
+                        console.log(jqXHR.responseText);
+                    }
+                }
+                $.ajax(send)
+            })
+        })
+        $(function(){
+            $("#r_submit").on('click', function(){
+                var id = $("#r_id").val();
+                var json = {'command':'show',data:{'id':id}};
+                var send = {
+                    type:'POST',
+                    url:'http://localhost/userapi/index.php/main',
+                    data:json,
+                    success:function(data,status,xhr){
+                        console.log(data);
+                        $("#r_label").text(JSONtoString(data));
+                    },
+                    error:function(jqXHR, textStatus, errorThrown){
+                        console.log(jqXHR.responseText);
+                    }
+                }
+                $.ajax(send)
+            })
+        })
+        $(function(){
+            $("#d_submit").on('click', function(){
+                var id = $("#d_id").val();
+                var json = {'command':'delete',data:{'id':id}};
+                var send = {
+                    type:'POST',
+                    url:'http://localhost/userapi/index.php/main',
+                    data:json,
+                    success:function(data,status,xhr){
+                        console.log(data);
+                        $("#d_label").text(JSONtoString(data));
+                    },
+                    error:function(jqXHR, textStatus, errorThrown){
+                        console.log(jqXHR.responseText);
+                    }
+                }
+                $.ajax(send)
+            })
+        })
+        $(function(){
+            $("#l_submit").on('click', function(){
+                var page = $("#l_page").val();
+                var json = {'command':'list',data:{'page':page}};
+                var send = {
+                    type:'POST',
+                    url:'http://localhost/userapi/index.php/main',
+                    data:json,
+                    success:function(data,status,xhr){
+                        console.log(data);
+                        $("#l_label").text(data);
+                        // $("#l_label").text(toString(data));
+                        // $("#l_label").text(JSON.stringify(data));
+                        // data.foreach(function(element){
+                        //     $("#l_label").text($.param(element));
+                        //     console.log(element);
+                        // })
+                    },
+                    error:function(jqXHR, textStatus, errorThrown){
+                        console.log(jqXHR.responseText);
+                    }
+                }
+                $.ajax(send)
+            })
+        })
+    </script>
 </head>
 <body>
-index
+    <table class="table">
+        <thead class="thead-light">
+            <th scope="col" width="100">작동</th><th scope="col">입력</th><th scope="col" width="50">확인</th>
+        </thead>
+        <tr>
+            <td scope="row">유저 생성</td>
+            <td>
+                <table class="table">
+                    <tr>
+                        <td>email =</td>
+                        <td><input id="c_email"></td>
+                    </tr>
+                    <tr>
+                        <td>password = </td>
+                        <td><input id="c_pwd" type="password"></td>
+                    </tr>
+                    <tr>
+                        <td>name = </td>
+                        <td><input id="c_name"></td>
+                    </tr>
+                    <tr>
+                        <td>phone = </td>
+                        <td><input id="c_phone"></td>
+                    </tr>
+                    <tr>
+                        <td>추천인 = </td>
+                        <td><input id="c_recommender"></td>
+                    </tr>
+                </table>
+            </td>
+            <td><input id="c_submit" type="submit"></td>
+        </tr>
+        <tr>
+            <td scope="row">유저 수정</td>
+            <td>
+                <table class="table table-dark">
+                    <tr>
+                        <td>id 조회 =</td>
+                        <td><input id="ru_id"></td>
+                        <td>
+                            <input type="submit" id="ru_submit">
+                        </td>
+                    </tr>
+                </table>
+                <table class="table" id="updateTable">
+                    <tr>
+                        <td>email =</td>
+                        <td><input id="u_email"></td>
+                    </tr>
+                    <tr>
+                        <td>password = </td>
+                        <td><input id="u_pwd" type="password"></td>
+                    </tr>
+                    <tr>
+                        <td>name = </td>
+                        <td><input id="u_name"></td>
+                    </tr>
+                    <tr>
+                        <td>phone = </td>
+                        <td><input id="u_phone"></td>
+                    </tr>
+                    <tr>
+                        <td>추천코드 = </td>
+                        <td><input id="u_rcode"></td>
+                    </tr>
+                </table>
+            </td>
+            <td><input type="submit" id="u_submit"></td>
+        </tr>
+        <tr>
+            <td scope="row">유저 확인</td>
+            <td>
+                <table width=100%>
+                    <tr><td>id = <input id="r_id"></td></tr>
+                    <tr><td><label id="r_label"></label></td></tr>
+                </table>
+            </td>
+            <td><input type="submit" id="r_submit"></td>
+        </tr>
+        <tr>
+            <td scope="row">유저 삭제</td>
+            <td>
+                <table width="100%">
+                    <tr><td>id = <input id="d_id"></td></tr>
+                    <tr><td><label id="d_label"></label></td></tr>
+                </table>
+            </td>
+            <td><input type="submit" id="d_submit"></td>
+        </tr>
+        <tr>
+            <td>유저 리스트</td>
+            <td>
+                <table width="100%">
+                    <tr><td>page = <input id="l_page"></td></tr>
+                    <tr><td><label id="l_label"></label></td></tr>
+                </table>
+            </td>
+            <td><input type="submit" id="l_submit"></td>
+        </tr>
+    </table>
 </body>
 </html>

@@ -2,3 +2,4 @@
 .idea/*
 mysql_data/*
 docker-compose.yml
+userapi/application/config/database.php
